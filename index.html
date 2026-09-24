@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TeachHub — Teacher Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark"><i data-lucide="graduation-cap"></i></div>
+        <div>
+          <div class="brand-name">TeachHub</div>
+          <div class="brand-subtitle">Teacher Portal</div>
+        </div>
+      </div>
+
+      <nav class="nav-main">
+        <button class="nav-item active" data-page="dashboard"><i data-lucide="layout-grid"></i><span>Dashboard</span></button>
+        <button class="nav-item" data-page="subjects"><i data-lucide="book-open-check"></i><span>Subjects</span></button>
+        <button class="nav-item" data-page="attendance"><i data-lucide="calendar-check"></i><span>Attendance</span></button>
+        <button class="nav-item" data-page="lessons"><i data-lucide="book-open"></i><span>Lesson Plans</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <nav>
+          <button class="nav-item" data-page="subscribe"><i data-lucide="credit-card"></i><span>Donate</span></button>  <!--Donate instead of Subscribe-->
+          <!--<button class="nav-item" data-page="admin"><i data-lucide="shield-check"></i><span>Subscriptions (Admin)</span></button> -->
+        </nav>
+        <!--<div class="signout-wrap">
+          <button class="nav-item signout" id="signOutBtn"><i data-lucide="log-out"></i><span>Sign Out</span></button>
+        </div> -->
+      </div>
+    </aside>
+
+    <button class="mobile-menu" id="mobileMenu"><i data-lucide="menu"></i></button>
+
+    <main class="main-content">
+      <!-- Dashboard -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-inner dashboard-inner">
+          <header class="page-header">
+            <div>
+              <h1>Welcome Back</h1>
+              <p id="todayText"></p>  <!--I removed the Date here -->
+            </div>
+          </header>
+
+          <div class="stat-grid">
+            <article class="stat-card">
+              <div><p>Total Subjects</p><strong id="statSubjects">4</strong><span>Active subjects</span></div>
+              <div class="stat-icon purple"><i data-lucide="book-copy"></i></div>
+            </article>
+            <article class="stat-card">
+              <div><p>Total Enrolled</p><strong id="statStudents">13</strong><span>Across all subjects</span></div>
+              <div class="stat-icon orange"><i data-lucide="users"></i></div>
+            </article>
+            <article class="stat-card">
+              <div><p>Present Today</p><strong id="statPresent">0</strong><span>All present</span></div>
+              <div class="stat-icon green"><i data-lucide="calendar-check"></i></div>
+            </article>
+            <article class="stat-card">
+              <div><p>Lesson Plans</p><strong id="statLessons">2</strong><span>Total created</span></div>
+              <div class="stat-icon red"><i data-lucide="book-open"></i></div>
+            </article>
+          </div>
+
+          <div class="dashboard-panels">
+            <article class="panel attendance-panel">
+              <div class="panel-title-row">
+                <h2>Today's Attendance</h2>
+                <button class="text-link" data-page-link="attendance">View All</button>
+              </div>
+              <div class="empty-state compact">
+                <i data-lucide="calendar-check"></i>
+                <p>No attendance marked today</p>
+                <button class="text-link" data-page-link="attendance">Mark Attendance</button>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-title-row">
+                <h2>Recent Lesson Plans</h2>
+                <button class="text-link" data-page-link="lessons">View All</button>
+              </div>
+              <div id="recentLessons" class="recent-list"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Subjects -->
+      <section class="page" id="page-subjects">
+        <div class="page-inner">
+          <header class="page-header split">
+            <div>
+              <h1>Subjects</h1>
+              <p>Manage your subjects and their student rosters</p>
+            </div>
+            <button class="primary-btn" id="newSubjectBtn"><i data-lucide="plus"></i> New Subject</button>
+          </header>
+          <div class="toolbar">
+            <label class="search-box"><i data-lucide="search"></i><input id="subjectSearch" type="search" placeholder="Search subjects..." /></label>
+          </div>
+          <div class="subject-grid" id="subjectGrid"></div>
+        </div>
+      </section>
+
+      <!-- Attendance -->
+      <section class="page" id="page-attendance">
+        <div class="page-inner">
+          <header class="page-header split">
+            <div>
+              <h1>Attendance</h1>
+              <p>Track attendance per subject</p>
+            </div>
+            <div class="header-actions">
+              <button class="secondary-btn" id="downloadCsvBtn"><i data-lucide="download"></i> Download CSV</button>
+              <button class="secondary-btn" id="printAttendanceBtn"><i data-lucide="printer"></i> Print / Save PDF</button>
+              <button class="primary-btn soft" id="saveAttendanceBtn"><i data-lucide="save"></i> Save Attendance</button>
+            </div>
+          </header>
+
+          <div class="attendance-controls">
+            <select id="attendanceSubject"></select>
+            <input id="attendanceDate" type="date" />
+          </div>
+
+          <div class="status-legend">
+            <span class="legend present"><i data-lucide="check"></i> Present</span>
+            <span class="legend absent"><i data-lucide="x"></i> Absent</span>
+            <span class="legend late"><i data-lucide="clock-3"></i> Late</span>
+            <span class="legend excused"><i data-lucide="shield-check"></i> Excused</span>
+          </div>
+
+          <div class="attendance-summary-row">
+            <div id="attendanceSubjectBanner" class="subject-banner"></div>
+            <div class="attendance-counts">
+              <span class="count-chip present" id="presentCount">0 Present</span>
+              <span class="count-chip absent" id="absentCount">0 Absent</span>
+            </div>
+          </div>
+
+          <div class="attendance-table" id="attendanceTable"></div>
+        </div>
+      </section>
+
+      <!-- Lessons -->
+      <section class="page" id="page-lessons">
+        <div class="page-inner">
+          <header class="page-header split">
+            <div>
+              <h1>Lesson Plans</h1>
+              <p>Create and manage your teaching plans</p>
+            </div>
+            <button class="primary-btn" id="newLessonBtn"><i data-lucide="plus"></i> New Lesson Plan</button>
+          </header>
+
+          <div class="toolbar lesson-toolbar">
+            <label class="search-box"><i data-lucide="search"></i><input id="lessonSearch" type="search" placeholder="Search plans..." /></label>
+            <select id="lessonStatusFilter"><option value="all">All Status</option><option value="draft">Draft</option><option value="finalized">Finalized</option></select>
+          </div>
+
+          <div class="lesson-grid" id="lessonGrid"></div>
+        </div>
+      </section>
+
+      <!-- Subscribe -->
+      <section class="page" id="page-subscribe">
+        <div class="page-inner subscribe-inner">
+          <header class="subscribe-heading">
+          <!--  <h1>Choose Your Plan</h1>
+            <p>Unlock the full TeachHub experience</p>
+          -->  
+          </header>
+
+          <div class="plan-grid">
+            <article class="plan-card selected" data-plan="monthly">
+              <div class="plan-top">
+                <!--<div class="plan-icon primary"><i data-lucide="zap"></i></div>
+                <div><h2>Monthly</h2><p>TeachHub Monthly</p></div>
+                <span class="radio-dot checked"></span>
+              </div>
+              <div class="price">₱199<span>/month</span></div>
+            -->
+
+              <!-- QR Code -->
+              <div class="qr-code">
+                <p>Scan to donate</p>
+                <img src="images/code.jpeg" alt="GCash QR code for TeachHub payment">
+              </div>
+
+              <!--<ul>
+                <li>Unlimited subjects</li><li>Unlimited students</li><li>Attendance tracking</li><li>Lesson plan editor</li><li>PDF exports</li>
+              </ul>
+            </article>
+
+            <article class="plan-card" data-plan="yearly">
+              <div class="best-value">Best Value</div>
+              <div class="plan-top">
+                <div class="plan-icon muted"><i data-lucide="crown"></i></div>
+                <div><h2>Yearly</h2><p>TeachHub Yearly</p></div>
+                <span class="radio-dot"></span>
+              </div>
+              <div class="price">₱1,799<span>/year</span></div>
+              <ul>
+                <li>Everything in Monthly</li><li>Save ₱589 vs monthly</li><li>Priority support</li><li>Early access to new features</li><li>Dedicated teacher profile</li>
+              </ul>
+            </article>
+          </div>
+
+          <button class="continue-btn" id="continuePlanBtn">Continue with Monthly Plan →</button>
+          <p class="payment-note">Payment via GCash. Subscription activated after manual verification by admin.</p>
+
+          <div class="payment-form hidden" id="paymentForm">
+            <h2>Submit GCash Payment</h2>
+            <div class="form-grid">
+              <label>GCash Name<input id="gcashName" type="text" placeholder="Account holder name" /></label>
+              <label>Reference Number<input id="gcashRef" type="text" placeholder="e.g. 1234 5678 9012" /></label>
+              <label>Amount<input id="gcashAmount" type="number" readonly /></label>
+              <label>Plan<input id="gcashPlan" type="text" readonly /></label>
+            </div>
+            <button class="primary-btn wide" id="submitPaymentBtn">Submit for Admin Approval</button>
+          </div>
+        </div>
+      </section> -->
+
+      <!-- Admin -->
+      <section class="page" id="page-admin">
+        <div class="page-inner admin-inner">
+          <header class="admin-header">
+            <div class="admin-icon"><i data-lucide="crown"></i></div>
+            <div><h1>Subscription Approvals</h1><p>Review and activate GCash payments</p></div>
+          </header>
+          <div id="approvalList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Reusable modal -->
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal" id="modalBox">
+      <div class="modal-header"><h2 id="modalTitle">Modal</h2><button class="icon-btn" id="modalClose"><i data-lucide="x"></i></button></div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
